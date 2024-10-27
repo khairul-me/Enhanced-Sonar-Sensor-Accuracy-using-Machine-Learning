@@ -1,5 +1,3 @@
-# Enhanced Sonar Sensor Accuracy using Machine Learning
-
 <div align="center">
 <h2>Advanced Machine Learning Solution for Sonar Sensor Data Processing</h2>
 <p>Created by: Md Khairul Islam</p>

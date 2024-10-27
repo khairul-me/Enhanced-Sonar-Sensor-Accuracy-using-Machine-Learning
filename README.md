@@ -1,3 +1,5 @@
+# Enhanced Sonar Sensor Accuracy using Machine Learning
+
 <div align="center">
 <h2>Advanced Machine Learning Solution for Sonar Sensor Data Processing</h2>
 <p>Created by: Md Khairul Islam</p>
@@ -9,247 +11,277 @@
 - [Overview](#overview)
 - [System Architecture](#system-architecture)
 - [Data Processing Pipeline](#data-processing-pipeline)
-- [Machine Learning Implementation](#machine-learning-implementation)
+- [Hardware Setup](#hardware-setup)
+- [Neural Network Architecture](#neural-network-architecture)
 - [Signal Processing](#signal-processing)
 - [Performance Analysis](#performance-analysis)
-- [Installation](#installation)
-- [Usage](#usage)
+- [Model Training](#model-training)
+- [Basic Usage](#basic-usage)
+- [Advanced Features](#advanced-features)
 - [Troubleshooting](#troubleshooting)
 
 ## Overview
-This project implements sophisticated machine learning techniques to enhance sonar sensor accuracy, specifically addressing the challenge of distinguishing between actual objects and small holes through ensemble clustering and deep learning approaches.
+This project implements sophisticated machine learning techniques to enhance sonar sensor accuracy, focusing on improving object detection and classification through ensemble clustering and deep learning approaches.
 
 ### Basic Operating Principles
 ```mermaid
 sequenceDiagram
-    participant S as Sonar Sensor
-    participant P as Processor
-    participant ML as ML Pipeline
+    participant S as Sensor
+    participant D as Data Processor
+    participant ML as ML System
     
-    Note over S: Collect raw data
-    S ->> P: Send measurements
-    P ->> ML: Process data
-    Note over ML: Apply ML algorithms
-    ML -->> P: Return predictions
-    P -->> S: Adjust parameters
+    Note over S: Collect Data
+    S ->> D: Raw Measurements
+    D ->> ML: Processed Data
+    Note over ML: Apply ML Models
+    ML -->> D: Predictions
+    D -->> S: Adjust Parameters
 ```
 
 ## System Architecture
-
 ```mermaid
-graph TB
-    subgraph Input
-        A[Raw Sonar Data] --> B[Data Loading]
+flowchart TB
+    subgraph Input["Data Collection"]
+        A[Sonar Sensor] --> B[Data Acquisition]
+        B --> C[Initial Processing]
     end
 
-    subgraph Preprocessing
-        B --> C[Feature Engineering]
-        C --> D[Missing Value Handling]
-        D --> E[Outlier Removal]
-        E --> F[Signal Smoothing]
-        F --> G[Standardization]
-        G --> H[PCA]
-    end
-
-    subgraph ML["Machine Learning Pipeline"]
-        H --> I[Clustering Ensemble]
-        H --> J[1D CNN]
+    subgraph ML["ML Pipeline"]
+        C --> D[Feature Engineering]
+        D --> E[Data Preprocessing]
+        E --> F[Model Processing]
         
-        subgraph Clustering["Clustering Algorithms"]
-            K[KMeans]
-            L[GMM]
-            M[DBSCAN]
-            N[Agglomerative]
-            O[Spectral]
+        subgraph Models["ML Models"]
+            G[Clustering]
+            H[CNN]
+            I[Ensemble]
         end
         
-        I --> Clustering
+        F --> Models
     end
 
-    subgraph Evaluation
-        I --> P[Clustering Metrics]
-        J --> Q[Error Analysis]
-        P --> R[Final Results]
-        Q --> R
+    subgraph Output["Results"]
+        Models --> J[Predictions]
+        J --> K[Performance Metrics]
+        K --> L[Final Output]
     end
 
     style Input fill:#e1f5fe
-    style Preprocessing fill:#fff3e0
-    style ML fill:#f3e5f5
-    style Evaluation fill:#e8f5e9
-    style Clustering fill:#fce4ec
+    style ML fill:#fff3e0
+    style Output fill:#e8f5e9
+    style Models fill:#f3e5f5
 ```
 
 ## Data Processing Pipeline
-
 ```mermaid
 flowchart LR
-    A[Raw Sensor Data] --> B[Feature Extraction]
-    B --> C{Missing Values?}
-    C -->|Yes| D[Fill with Mean]
-    C -->|No| E[Continue]
-    D --> F[Outlier Detection]
-    E --> F
-    F --> G[Signal Smoothing]
-    G --> H[Standardization]
-    H --> I[Dimensionality Reduction]
+    A[Raw Data] --> B[Feature Engineering]
+    B --> C[Data Cleaning]
+    C --> D[Preprocessing]
+    D --> E[Model Input]
     
-    style A fill:#e1f5fe
-    style B fill:#fff3e0
-    style C fill:#f3e5f5
+    subgraph Processing["Processing Steps"]
+        F[Remove Outliers]
+        G[Handle Missing Values]
+        H[Normalize Data]
+        I[Feature Selection]
+    end
+    
+    C --> Processing
+    Processing --> D
+    
+    style A fill:#f3e5f5
+    style B fill:#e1f5fe
+    style C fill:#fff3e0
     style D fill:#e8f5e9
-    style E fill:#fce4ec
-    style F fill:#f3e5f5
-    style G fill:#fff3e0
-    style H fill:#e1f5fe
-    style I fill:#e8f5e9
+    style E fill:#f3e5f5
+    style Processing fill:#e1f5fe
 ```
 
-## Machine Learning Implementation
-
-### Neural Network Architecture
+## Neural Network Architecture
 ```mermaid
 flowchart LR
-    A[Input Layer] --> B[Conv1D]
+    A[Input Layer] --> B[Conv1D Layer 1]
     B --> C[MaxPool1D]
-    C --> D[Conv1D]
-    D --> E[MaxPool1D]
+    C --> D[Conv1D Layer 2]
+    D --> E[MaxPool2D]
     E --> F[Flatten]
-    F --> G[Dense ReLU]
+    F --> G[Dense Layer]
     G --> H[Dropout]
-    H --> I[Dense Output]
+    H --> I[Output Layer]
     
     style A fill:#e1f5fe
     style B fill:#fff3e0
     style C fill:#f3e5f5
     style D fill:#e8f5e9
-    style E fill:#fce4ec
-    style F fill:#e1f5fe
-    style G fill:#fff3e0
-    style H fill:#f3e5f5
-    style I fill:#e8f5e9
+    style E fill:#f3e5f5
+    style F fill:#fff3e0
+    style G fill:#e1f5fe
+    style H fill:#e8f5e9
+    style I fill:#f3e5f5
 ```
 
-### Signal Processing System
+## Signal Processing
 ```mermaid
 flowchart TB
-    subgraph "Smart Processing System"
-        direction TB
+    subgraph Processing["Signal Processing System"]
+        A[Raw Signal] --> B[Preprocessing]
         
-        Input[Raw Sensor Data] --> PreProcess
-        
-        subgraph "Pre-Processing"
-            PreProcess[Initial Processing]
-            Validate[Data Validation]
-            TimeCheck[Time Series Check]
-            
-            PreProcess --> Validate
-            Validate --> TimeCheck
+        subgraph Filters["Filtering Stages"]
+            C[Noise Removal]
+            D[Outlier Detection]
+            E[Signal Enhancement]
         end
         
-        subgraph "Processing Layers"
-            direction LR
-            L1[Clustering Layer]
-            L2[CNN Processing]
-            L3[Ensemble Integration]
-            
-            TimeCheck --> L1
-            L1 --> L2
-            L2 --> L3
-        end
-        
-        subgraph "Post-Processing"
-            Quality[Quality Metrics]
-            Confidence[Confidence Score]
-            Analysis[Performance Analysis]
-            
-            L3 --> Quality
-            Quality --> Confidence
-            Confidence --> Analysis
-        end
-        
-        Analysis --> Output[Final Output]
+        B --> Filters
+        Filters --> F[Final Signal]
     end
+    
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style Filters fill:#f3e5f5
+    style F fill:#e8f5e9
 ```
 
 ## Performance Analysis
 ```mermaid
-graph TB
-    subgraph "Performance Metrics"
-        Raw[Raw Data] --> Metrics
+flowchart TB
+    subgraph Performance["Performance Metrics"]
+        A[Raw Data] --> Analysis
         
-        subgraph "Metrics"
-            M1[Clustering Scores]
-            M2[Error Rates]
-            M3[Accuracy Metrics]
-            M4[Response Time]
-            
-            Metrics --> M1 & M2 & M3 & M4
+        subgraph Metrics["Analysis Metrics"]
+            B[Clustering Performance]
+            C[Error Rates]
+            D[Accuracy Scores]
+            E[Processing Time]
         end
         
-        subgraph "Results"
-            R1[Improved Accuracy]
-            R2[Reduced Noise]
-            R3[Better Classification]
-            
-            M1 & M2 & M3 & M4 --> R1
-            R1 --> R2
-            R2 --> R3
+        Analysis --> B & C & D & E
+        
+        subgraph Results["Improvements"]
+            F[Enhanced Accuracy]
+            G[Noise Reduction]
+            H[Better Detection]
         end
+        
+        B & C & D & E --> F
+        F --> G
+        G --> H
     end
+    
+    style A fill:#e1f5fe
+    style Metrics fill:#fff3e0
+    style Results fill:#e8f5e9
 ```
 
-## Troubleshooting Guide
+## Model Training
 ```mermaid
-graph TD
-    Start[Issue Detected] --> Type{Issue Type}
+flowchart TB
+    subgraph Training["Training Process"]
+        A[Training Data] --> B[Data Preparation]
+        B --> C[Model Training]
+        
+        subgraph Validation["Validation"]
+            D[Cross Validation]
+            E[Performance Metrics]
+            F[Model Tuning]
+        end
+        
+        C --> Validation
+        Validation --> G[Final Model]
+    end
     
-    Type -->|Data Quality| Quality[Check Data Quality]
-    Type -->|Model Performance| Model[Check Model Parameters]
-    Type -->|Processing Time| Speed[Optimize Processing]
-    Type -->|Accuracy Issues| Accuracy[Validate Results]
-    
-    Quality --> DataFix[Clean Data]
-    Model --> ModelFix[Tune Parameters]
-    Speed --> SpeedFix[Improve Efficiency]
-    Accuracy --> AccuracyFix[Enhance Accuracy]
-    
-    DataFix --> Solution[Problem Resolved]
-    ModelFix --> Solution
-    SpeedFix --> Solution
-    AccuracyFix --> Solution
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style Validation fill:#e8f5e9
+    style G fill:#e1f5fe
 ```
 
-## Features
+## Troubleshooting
+```mermaid
+flowchart TD
+    A[Issue Detection] --> B{Problem Type}
+    
+    B -->|Data Issues| C[Check Data Quality]
+    B -->|Model Problems| D[Verify Model]
+    B -->|Performance| E[Optimize System]
+    
+    C --> F[Clean Data]
+    D --> G[Adjust Parameters]
+    E --> H[Improve Efficiency]
+    
+    F & G & H --> I[Resolution]
+    
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#f3e5f5
+    style E fill:#f3e5f5
+    style F fill:#e8f5e9
+    style G fill:#e8f5e9
+    style H fill:#e8f5e9
+    style I fill:#e1f5fe
+```
+
+## Basic Usage
+```python
+from sonar_ml_processor import SonarProcessor
+
+# Initialize processor
+processor = SonarProcessor()
+
+# Process data
+results = processor.process_data(sensor_data)
+
+# Get predictions
+predictions = processor.predict(results)
+```
+
+## Advanced Features
 
 ### Data Processing & Analysis
-- **Feature Engineering**
+- Feature Engineering
   - Distance calculations
-  - Velocity derivation
-  - Acceleration computation
-  - Jerk analysis
-  - Rolling mean calculations
-  - Angular measurements
-
-- **Data Cleaning**
-  - Automated outlier detection
+  - Velocity analysis
+  - Acceleration metrics
+  - Signal characteristics
+- Data Cleaning
+  - Outlier removal
+  - Noise reduction
   - Missing value handling
-  - Signal smoothing
+- Advanced Processing
+  - Signal enhancement
+  - Feature selection
+  - Dimensionality reduction
 
 ### Machine Learning Implementation
+- Clustering Algorithms
+  - KMeans
+  - DBSCAN
+  - Spectral Clustering
+- Deep Learning
+  - 1D CNN architecture
+  - Custom loss functions
+  - Advanced optimizers
+- Ensemble Methods
+  - Model combination
+  - Weighted voting
+  - Prediction aggregation
 
-#### Clustering Ensemble
-- KMeans clustering
-- Gaussian Mixture Models
-- DBSCAN
-- Agglomerative Clustering
-- Spectral Clustering
-
-#### 1D CNN Features
-- Dual convolutional layers
-- MaxPooling layers
-- Dropout regularization
-- Dense output layers
+## Performance Metrics
+- Clustering Performance
+  - Silhouette score
+  - Calinski-Harabasz index
+  - Davies-Bouldin index
+- Model Accuracy
+  - Precision
+  - Recall
+  - F1-score
+- System Efficiency
+  - Processing time
+  - Memory usage
+  - Resource utilization
 
 ## Installation
 
@@ -267,45 +299,12 @@ joblib==1.2.0
 
 ### Setup
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/sonar-sensor-ml.git
-cd sonar-sensor-ml
+# Clone repository
+git clone https://github.com/yourusername/enhanced-sonar-ml.git
+cd enhanced-sonar-ml
 
 # Install dependencies
 pip install -r requirements.txt
-```
-
-## Usage
-
-### Basic Usage
-```python
-from sonar_processor import SonarProcessor
-
-# Initialize processor
-processor = SonarProcessor()
-
-# Process data
-results = processor.process_data(input_data)
-```
-
-### Advanced Usage
-```python
-from sonar_processor import SonarProcessor
-import numpy as np
-
-# Initialize with custom parameters
-processor = SonarProcessor(
-    clustering_ensemble=True,
-    cnn_enabled=True,
-    feature_engineering=True
-)
-
-# Process with advanced options
-results = processor.process_data(
-    input_data,
-    noise_reduction=True,
-    outlier_removal=True
-)
 ```
 
 ## License
